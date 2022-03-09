@@ -132,3 +132,30 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+    post:
+      summary: got message
+      operationId: gotMessage
+      tags:
+        - message
+      requestBody:
+        description: Message
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Message'
+      responses:
+        '200':
+          description: Login
+          content:
+            application/text:
+              schema:
+                type: string
+        '404':
+          description: Account not found in db
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
