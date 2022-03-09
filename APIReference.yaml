@@ -1,0 +1,94 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: my-sms-gate
+servers:
+  - url: http://localhost:8080/api
+components:
+  schemas:
+    Account:
+      type: object
+      required:
+        - login
+        - passwordHash
+      properties:
+        id:
+          type: integer
+          format: int64
+        login:
+          type: string
+        passwordHash:
+          type: string
+    Token:
+      type: object
+      required:
+        - account
+        - tokenHash
+      properties:
+        id:
+          type: integer
+          format: int64
+        account:
+          $ref: '#/components/schemas/Account'
+        tokenHash:
+          type: string
+    Message:
+      type: object
+      required:
+        - account
+        - date
+        - from
+        - text
+      properties:
+        id:
+          type: integer
+          format: int64
+        account:
+          $ref: '#/components/schemas/Account'
+        date:
+          type: string
+          format: date-time
+        from:
+          type: string
+        text:
+          type: string
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic
+security:
+  - BasicAuth: []
+
+paths:
+  /account/login:
+    get:
+      summary: Get token
+      operationId: getToken
+      tags:
+        - account
+      responses:
+        '200':
+          description: Login
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Token'
+        '404':
+          description: Account not found in db
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
