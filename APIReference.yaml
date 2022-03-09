@@ -17,7 +17,7 @@ components:
           format: int64
         login:
           type: string
-        passwordHash:
+        password:
           type: string
     Token:
       type: object
@@ -72,11 +72,18 @@ security:
 
 paths:
   /account/login:
-    get:
+    post:
       summary: Get token
       operationId: getToken
       tags:
         - account
+      requestBody:
+        description: Input Account
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Account'
       responses:
         '200':
           description: Login
@@ -88,6 +95,39 @@ paths:
           description: Account not found in db
         default:
           description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /message:
+    get:
+      summary: get messages
+      operationId: getMessages
+      tags:
+        - message
+      parameters:
+        - in: query
+          name: token
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Messages
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Message'
+        '403':
+          description: Access denied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        default:
+          description: Access denied
           content:
             application/json:
               schema:
