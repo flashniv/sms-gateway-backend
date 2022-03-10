@@ -15,13 +15,13 @@ public class SmsGatewayApplication {
 	@Bean
 	public CommandLineRunner commandLineRunner(ApplicationContext ctx) {
 		return args -> {
-			AccountRepository accountRepository=ctx.getBean(AccountRepository.class);
+			/*AccountRepository accountRepository=ctx.getBean(AccountRepository.class);
 
 			Account account=new Account();
 			account.setNumber("+16062038541");
 			account.setPassword("uang8ieQu|ae^T*oo^l9thaeSaiVi1");
 
-			accountRepository.save(account);
+			accountRepository.save(account);*/
 		};
 	}
 
