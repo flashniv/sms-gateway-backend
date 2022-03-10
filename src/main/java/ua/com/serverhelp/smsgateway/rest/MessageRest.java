@@ -20,6 +20,7 @@ import java.util.Optional;
 
 @Slf4j
 @RestController
+@CrossOrigin
 @RequestMapping("/api/message")
 public class MessageRest {
     @Autowired
