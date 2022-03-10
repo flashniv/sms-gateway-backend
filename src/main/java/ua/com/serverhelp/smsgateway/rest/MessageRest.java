@@ -9,10 +9,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ua.com.serverhelp.smsgateway.db.AccountRepository;
 import ua.com.serverhelp.smsgateway.db.MessageRepository;
+import ua.com.serverhelp.smsgateway.db.TokenRepository;
 import ua.com.serverhelp.smsgateway.entity.Account;
 import ua.com.serverhelp.smsgateway.entity.Message;
+import ua.com.serverhelp.smsgateway.entity.Token;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -23,12 +26,21 @@ public class MessageRest {
     private MessageRepository messageRepository;
     @Autowired
     private AccountRepository accountRepository;
+    @Autowired
+    private TokenRepository tokenRepository;
 
     @GetMapping("")
     ResponseEntity<String> getAllMessages(
             @RequestParam String token
     ){
-        return ResponseEntity.ok(new JSONObject().toString());
+        Optional<Token> optionalToken=tokenRepository.findByHash(token);
+        if(optionalToken.isPresent()) {
+            Account account=optionalToken.get().getAccount();
+            List<Message> messages=messageRepository.findAllByAccount(account);
+            JSONArray jsonArray=new JSONArray(messages);
+            return ResponseEntity.ok(jsonArray.toString());
+        }
+        return ResponseEntity.status(403).body("Access denied");
     }
 
     @PostMapping("")

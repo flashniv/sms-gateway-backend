@@ -4,6 +4,8 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.Base64;
 
 @Entity
 @Data
@@ -16,4 +18,14 @@ public class Token {
     private Account account;
     private Instant expireAt;
     private String hash;
+
+    public static Token createToken(Account account) {
+        Token res=new Token();
+
+        res.setAccount(account);
+        res.setExpireAt(Instant.now().plus(2, ChronoUnit.HOURS));
+        res.setHash(Base64.getEncoder().encodeToString((account.getNumber()+Instant.now().getEpochSecond()).getBytes()));
+
+        return res;
+    }
 }
