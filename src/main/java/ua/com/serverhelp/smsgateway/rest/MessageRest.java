@@ -55,8 +55,8 @@ public class MessageRest {
             if (event_type.equals("message.received")){
                 Message messageEntity=new Message();
                 JSONObject payload=data.getJSONObject("payload");
-                String received_at= payload.getString("received_at");
-                messageEntity.setReceivedAt(Instant.parse(received_at.replace("+00:00", "")));
+                String received_at= payload.getString("received_at").replace("+00:00", "");
+                messageEntity.setReceivedAt(Instant.parse(received_at.substring(0,received_at.length()-1)+'Z'));
                 JSONObject from=payload.getJSONObject("from");
                 messageEntity.setFromNumber(from.getString("phone_number"));
                 messageEntity.setText(payload.getString("text"));
